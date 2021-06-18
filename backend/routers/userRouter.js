@@ -8,6 +8,29 @@ import { generateToken, isAuth } from '../utils.js';
 const userRouter = express.Router();
 
 userRouter.get(
+  '/',
+  expressAsyncHandler(async (req, res) => {
+    const iheb = await User.find();
+    if (iheb) {
+      res.send(iheb);
+    } else {
+      res.status(404).send({ message: 'users are Not Found' });
+    }
+  })
+);
+
+// Delete function
+userRouter.delete('/:id', async (req, res) => {
+  try {
+    await User.deleteOne({ _id: req.params.id });
+    res.status(200).send({ msg: 'user deleted' });
+  } catch (error) {
+    res.status(500).send({ msg: 'user is not deleted', error });
+  }
+});
+// end
+
+userRouter.get(
   '/seed',
   expressAsyncHandler(async (req, res) => {
     // await User.remove({});
